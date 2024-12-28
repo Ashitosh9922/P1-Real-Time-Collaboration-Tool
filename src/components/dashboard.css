@@ -1,0 +1,18 @@
+.dashboard {
+  padding: 20px;
+  text-align: center;
+}
+
+.document-list {
+  margin-top: 20px;
+}
+
+.document-item {
+  margin-bottom: 10px;
+}
+
+button {
+  margin: 5px;
+  padding: 10px;
+  cursor: pointer;
+}
