@@ -11,7 +11,7 @@ A **Real-Time Document Collaboration Tool** built using the **MERN stack** (Mong
 - **User Authentication**: Secure access using JWT tokens.  
 - **Document Retrieval**: Retrieve documents via unique IDs.  
 - **Word & Character Count**: Live count displayed in the editor.  
-- **Theme Toggle**: Light and dark mode for better usability.  
+- **Editor Theme Toggle**: Light and dark mode in Editor for better usability  
 - **History Management**: Navigate between versions of the document.  
 - **Persistent Notifications**: Notifications persist after refresh.  
 - **Responsive Design**: Works seamlessly on all devices.
