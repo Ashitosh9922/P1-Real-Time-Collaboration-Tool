@@ -1,4 +1,4 @@
-REAL-TIME COLLABORATION TOOL 
+***REAL-TIME COLLABORATION TOOL*** 
 A **Real-Time Document Collaboration Tool** built using the **MERN stack** (MongoDB, Express.js, React, Node.js) and **Socket.IO** for real-time communication. It supports collaborative editing, version control, notifications, and document sharing.
 
 ### **Features**  
