@@ -1,0 +1,82 @@
+/* Container for the document grid */
+.document-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns */
+    gap: 20px; /* Gap between cards */
+    padding: 20px;
+    grid-auto-rows: 250px; /* Fixed row height */
+}
+
+/* Individual document card styling */
+.document-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+/* Card title */
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Card content preview */
+.card-text {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* Button styles */
+.btn-open {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-open:hover {
+    background-color: #0056b3;
+}
+
+/* Delete button styling */
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 1200px) {
+    .document-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns on medium screens */
+    }
+}
+
+@media (max-width: 900px) {
+    .document-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on small screens */
+    }
+}
+
+@media (max-width: 600px) {
+    .document-grid {
+        grid-template-columns: 1fr; /* 1 column on extra small screens */
+    }
+}
