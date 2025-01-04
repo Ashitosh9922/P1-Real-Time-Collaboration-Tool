@@ -1,7 +1,3 @@
-Here’s a rewritten and concise version of your project description for easy readability in a chat format:
-
----
-
 **Real-Time Collaboration Tool**  
 A **Real-Time Document Collaboration Tool** built using the **MERN stack** (MongoDB, Express.js, React, Node.js) and **Socket.IO** for real-time communication. It supports collaborative editing, version control, notifications, and document sharing.
 
