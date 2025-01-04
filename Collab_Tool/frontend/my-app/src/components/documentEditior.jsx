@@ -14,6 +14,9 @@ const DocumentEditor = () => {
     const [hasUserUpdated, setHasUserUpdated] = useState(false);
     const [history, setHistory] = useState([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
+    const [wordCount, setWordCount] = useState(0); // State for word count
+    const [charCount, setCharCount] = useState(0); // State for character count
+    const [editorTheme, setEditorTheme] = useState('light'); // State for editor theme (light/dark)
     const socket = useSocket();
 
     useEffect(() => {
@@ -43,6 +46,13 @@ const DocumentEditor = () => {
 
         fetchDocument();
     }, [documentId]);
+
+    // Update word and character count whenever content changes
+    useEffect(() => {
+        const words = content.trim().split(/\s+/).filter(Boolean);
+        setWordCount(words.length);
+        setCharCount(content.length);
+    }, [content]);
 
     useEffect(() => {
         const savedNotifications = JSON.parse(localStorage.getItem('notifications')) || [];
@@ -143,6 +153,10 @@ const DocumentEditor = () => {
         }
     };
 
+    const toggleEditorTheme = () => {
+        setEditorTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+    };
+
     if (loading) {
         return <p>Loading document...</p>;
     }
@@ -154,17 +168,24 @@ const DocumentEditor = () => {
         <div>
             <h2>Document Editor</h2>
             <h3>{title}</h3>
+            <button onClick={toggleEditorTheme}>
+                Toggle {editorTheme === 'light' ? 'Dark' : 'Light'} Mode
+            </button>
             <textarea
                 value={content}
                 onChange={handleContentChange}
                 placeholder="Edit your document here"
-                className="document-editor-textarea"
+                className={`document-editor-textarea ${editorTheme}`}
                 disabled={loading}
             />
             <div className="editor-actions">
                 <button onClick={undo} disabled={historyIndex <= 0}>Undo</button>
                 <button onClick={redo} disabled={historyIndex >= history.length - 1}>Redo</button>
                 <button onClick={clearDocument}>Clear Document</button>
+            </div>
+            <div className="word-char-count">
+                <p>Word Count: {wordCount}</p>
+                <p>Character Count: {charCount}</p>
             </div>
             <div className="notifications-container">
                 {notifications.map((notification, index) => (
