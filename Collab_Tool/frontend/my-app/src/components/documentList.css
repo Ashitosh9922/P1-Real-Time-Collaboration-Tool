@@ -1,13 +1,13 @@
-/* Container for the document grid */
+
 .document-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns */
-    gap: 20px; /* Gap between cards */
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 20px; 
     padding: 20px;
-    grid-auto-rows: 250px; /* Fixed row height */
+    grid-auto-rows: 250px; 
 }
 
-/* Individual document card styling */
+
 .document-card {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -20,20 +20,20 @@
     padding: 15px;
 }
 
-/* Card title */
+
 .card-title {
     font-size: 18px;
     font-weight: bold;
 }
 
-/* Card content preview */
+
 .card-text {
     font-size: 14px;
     color: #555;
     margin-bottom: 15px;
 }
 
-/* Button styles */
+
 .btn-open {
     background-color: #007bff;
     color: white;
@@ -48,7 +48,7 @@
     background-color: #0056b3;
 }
 
-/* Delete button styling */
+
 .btn-delete {
     background-color: #dc3545;
     color: white;
@@ -62,21 +62,21 @@
     background-color: #c82333;
 }
 
-/* Responsive design for smaller screens */
+
 @media (max-width: 1200px) {
     .document-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 columns on medium screens */
+        grid-template-columns: repeat(3, 1fr); 
     }
 }
 
 @media (max-width: 900px) {
     .document-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns on small screens */
+        grid-template-columns: repeat(2, 1fr); 
     }
 }
 
 @media (max-width: 600px) {
     .document-grid {
-        grid-template-columns: 1fr; /* 1 column on extra small screens */
+        grid-template-columns: 1fr; 
     }
 }
