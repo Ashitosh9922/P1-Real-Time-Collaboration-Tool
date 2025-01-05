@@ -89,4 +89,4 @@ A **Real-Time Document Collaboration Tool** built using the **MERN stack** (Mong
    git push origin feature-name  
    ```  
 5. Create a pull request.   
-![Screenshot (100)](https://github.com/user-attachments/assets/c5a9a59b-d40f-462e-91fe-fed4544a7ab1)
+
