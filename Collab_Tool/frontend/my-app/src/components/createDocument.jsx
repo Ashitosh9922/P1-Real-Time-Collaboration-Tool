@@ -2,20 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useSocket } from '../SocketContext';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import './DocumentPage.css'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const CreateDocument = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [showForm, setShowForm] = useState(false); 
-    const [documents, setDocuments] = useState([]); 
-    const [searchQuery, setSearchQuery] = useState(''); 
+    const [showForm, setShowForm] = useState(false);
+    const [documents, setDocuments] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
     const socket = useSocket();
     const navigate = useNavigate();
 
     const handleCreate = (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token'); 
+        const token = localStorage.getItem('token');
 
         if (!token) {
             alert('User not logged in.');
@@ -33,7 +33,9 @@ const CreateDocument = () => {
             socket.on('documentCreated', (response) => {
                 if (response?.message === 'Document created successfully') {
                     alert('Document created successfully!');
-                    setShowForm(false); 
+                    setTitle(''); 
+                    setContent(''); 
+                    setShowForm(false);
                     fetchDocuments();
                 }
             });
@@ -47,7 +49,6 @@ const CreateDocument = () => {
         }
     };
 
-    // Fetch documents from the server
     const fetchDocuments = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -62,14 +63,13 @@ const CreateDocument = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setDocuments(response.data); // Assuming the backend returns an array of documents
+            setDocuments(response.data);
         } catch (error) {
             console.error('Error fetching documents:', error);
             alert('Error fetching documents. Please try again.');
         }
     };
 
-  
     const handleDelete = async (documentId) => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -82,7 +82,7 @@ const CreateDocument = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert('Document deleted successfully!');
-            fetchDocuments(); // Re-fetch the documents to reflect the deletion
+            fetchDocuments();
         } catch (error) {
             console.error('Error deleting document:', error);
             alert('Error deleting document. Please try again.');
@@ -93,76 +93,100 @@ const CreateDocument = () => {
         fetchDocuments();
     }, []);
 
-  
     const filteredDocuments = documents.filter((doc) =>
         doc.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    const toggleForm = () => {
+        setShowForm((prev) => !prev);
+        setTitle(''); // Clear title when toggling form
+        setContent(''); // Clear content when toggling form
+    };
+
     return (
-        <div>
-            <h1>Document Page</h1>
+        <div className="container py-5">
+            <h1 className="mb-4 text-center">Document Page</h1>
 
-            {/* Button to show/hide the document creation form */}
-            <button onClick={() => setShowForm(!showForm)}>
-                {showForm ? 'Cancel' : 'Create New Document'}
-            </button>
+            <div className="text-center mb-4">
+                <button
+                    onClick={toggleForm}
+                    className="btn btn-primary mb-3"
+                >
+                    {showForm ? 'Cancel' : 'Create New Document'}
+                </button>
+            </div>
 
-            {/* Form to create a new document */}
             {showForm && (
-                <form onSubmit={handleCreate}>
-                    <div>
-                        <label>Document Name:</label>
+                <form onSubmit={handleCreate} className="mx-auto" style={{ maxWidth: '600px' }}>
+                    <div className="mb-3">
+                        <label htmlFor="title" className="form-label" style={{ fontSize: '1.5rem' }}>
+                            Document Name
+                        </label>
                         <input
                             type="text"
+                            id="title"
+                            className="form-control"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             required
+                            style={{ fontSize: '1.25rem' }}
                         />
                     </div>
-                    <div>
-                        <label>Document Description:</label>
+                    <div className="mb-3">
+                        <label htmlFor="content" className="form-label" style={{ fontSize: '1.5rem' }}>
+                            Document Description
+                        </label>
                         <textarea
+                            id="content"
+                            className="form-control"
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             required
+                            style={{ height: '200px', fontSize: '1.25rem' }}
                         />
                     </div>
-                    <button type="submit">Create Document</button>
+                    <button type="submit" className="btn btn-success w-100" style={{ fontSize: '1.25rem' }}>
+                        Create Document
+                    </button>
                 </form>
             )}
 
-            <h2>Your Documents</h2>
+            <div className="my-4">
+                <input
+                    type="text"
+                    placeholder="Search documents by title"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="form-control mb-4"
+                    style={{ fontSize: '1.25rem' }}
+                />
+            </div>
 
-            {/* Search bar */}
-            <input
-                type="text"
-                placeholder="Search documents by title"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-bar"
-            />
-
-            <div className="document-grid">
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                 {filteredDocuments.length === 0 ? (
                     <p>No documents found.</p>
                 ) : (
                     filteredDocuments.map((doc) => (
-                        <div key={doc._id} className="document-card">
-                            <div className="card-body">
-                                <h5 className="card-title">{doc.title}</h5>
-                                <p>Created on: {new Date(doc.createdAt).toLocaleDateString()}</p>
-                                <p className="card-text">
-                                    {doc.content.substring(0, 100)}...
-                                </p>
-                                <Link to={`/edit/${doc._id}`} className="btn-open">
-                                    Open
-                                </Link>
-                                <button
-                                    onClick={() => handleDelete(doc._id)}
-                                    className="btn-delete"
-                                >
-                                    Delete
-                                </button>
+                        <div key={doc._id} className="col">
+                            <div className="card h-100">
+                                <div className="card-body">
+                                    <h5 className="card-title display-5">{doc.title}</h5>
+                                    <p className="card-text">{doc.content.substring(0, 100)}...</p>
+                                    <p className="card-text text-muted" style={{ fontSize: '1.2rem' }}>
+                                        Created on: {new Date(doc.createdAt).toLocaleDateString()}
+                                    </p>
+                                    <div className="d-flex justify-content-between">
+                                        <Link to={`/edit/${doc._id}`} className="btn btn-success btn-lg rounded-pill">
+                                            Open
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDelete(doc._id)}
+                                            className="btn btn-danger btn-lg rounded-pill"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))
