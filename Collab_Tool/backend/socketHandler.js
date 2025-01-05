@@ -6,7 +6,7 @@ module.exports = (io) => {
     io.on('connection', (socket) => {
         console.log(`User connected: ${socket.id}`);
 
-        // Handle document creation
+        
         socket.on('createDocument', async ({ title, content, token }) => {
             if (!token) {
                 socket.emit('documentError', { message: 'User is not logged in' });
@@ -14,7 +14,7 @@ module.exports = (io) => {
             }
 
             try {
-                // Validate token
+             
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
                 const user = await User.findById(decoded.id);
 
@@ -23,7 +23,7 @@ module.exports = (io) => {
                     return;
                 }
 
-                // Create a new document
+               
                 const newDocument = new Document({
                     title,
                     content,
@@ -32,7 +32,7 @@ module.exports = (io) => {
 
                 const savedDocument = await newDocument.save();
 
-                // Emit success event to the client
+                
                 socket.emit('documentCreated', {
                     message: 'Document created successfully',
                     document: savedDocument,
@@ -45,7 +45,7 @@ module.exports = (io) => {
             }
         });
 
-        // Listen for content updates (for real-time editing)
+      
         socket.on('updateDocument', async ({ documentId, content, token }) => {
             if (!token) {
                 socket.emit('documentError', { message: 'User is not logged in' });
@@ -53,7 +53,7 @@ module.exports = (io) => {
             }
 
             try {
-                // Validate token
+               
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
                 const user = await User.findById(decoded.id);
 
@@ -62,18 +62,18 @@ module.exports = (io) => {
                     return;
                 }
 
-                // Find the document and update the content
+                
                 const document = await Document.findById(documentId);
                 if (!document) {
                     socket.emit('documentError', { message: 'Document not found' });
                     return;
                 }
 
-                // Update document content
+                
                 document.content = content;
                 await document.save();
 
-                // Emit the updated document to all connected clients
+                
                 io.emit('documentUpdated', {
                     documentId,
                     content: document.content,
@@ -88,7 +88,7 @@ module.exports = (io) => {
             }
         });
 
-        // Handle disconnect
+      
         socket.on('disconnect', () => {
             console.log(`User disconnected: ${socket.id}`);
         });
