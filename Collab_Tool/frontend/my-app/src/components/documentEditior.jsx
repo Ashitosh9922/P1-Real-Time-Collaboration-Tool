@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useSocket } from '../SocketContext';
-import './DocumentEditor.css';
 
 const DocumentEditor = () => {
     const { documentId } = useParams();
@@ -14,9 +13,9 @@ const DocumentEditor = () => {
     const [hasUserUpdated, setHasUserUpdated] = useState(false);
     const [history, setHistory] = useState([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
-    const [wordCount, setWordCount] = useState(0); // State for word count
-    const [charCount, setCharCount] = useState(0); // State for character count
-    const [editorTheme, setEditorTheme] = useState('light'); // State for editor theme (light/dark)
+    const [wordCount, setWordCount] = useState(0);
+    const [charCount, setCharCount] = useState(0);
+    const [editorTheme, setEditorTheme] = useState(localStorage.getItem('editorTheme') || 'light');
     const socket = useSocket();
 
     useEffect(() => {
@@ -28,13 +27,9 @@ const DocumentEditor = () => {
                     setLoading(false);
                     return;
                 }
-
                 const response = await axios.get(`http://localhost:5000/api/documents/${documentId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                 });
-
                 setTitle(response.data.title);
                 setContent(response.data.content);
                 setLoading(false);
@@ -43,11 +38,9 @@ const DocumentEditor = () => {
                 setLoading(false);
             }
         };
-
         fetchDocument();
     }, [documentId]);
 
-    // Update word and character count whenever content changes
     useEffect(() => {
         const words = content.trim().split(/\s+/).filter(Boolean);
         setWordCount(words.length);
@@ -56,20 +49,19 @@ const DocumentEditor = () => {
 
     useEffect(() => {
         const savedNotifications = JSON.parse(localStorage.getItem('notifications')) || [];
-        setNotifications(savedNotifications);
+        setNotifications(savedNotifications.slice(0, 2));
     }, []);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return new Intl.DateTimeFormat('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: '2-digit',
+        const formattedDate = date.toLocaleDateString();
+        const formattedTime = date.toLocaleTimeString('en-GB', {
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
             hour12: true,
-        }).format(date);
+        });
+        return `${formattedDate} ${formattedTime}`;
     };
 
     useEffect(() => {
@@ -83,16 +75,14 @@ const DocumentEditor = () => {
                                 message: `Document updated by ${data.lastEditor} at ${formatDate(data.lastEdited)}`,
                                 type: 'info',
                             },
-                            ...notifications.slice(0, 4),
+                            ...notifications.slice(0, 1),
                         ];
-
                         setNotifications(newNotifications);
                         localStorage.setItem('notifications', JSON.stringify(newNotifications));
                     }
                 }
             });
         }
-
         return () => {
             if (socket) {
                 socket.off('documentUpdated');
@@ -154,7 +144,9 @@ const DocumentEditor = () => {
     };
 
     const toggleEditorTheme = () => {
-        setEditorTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+        const newTheme = editorTheme === 'light' ? 'dark' : 'light';
+        setEditorTheme(newTheme);
+        localStorage.setItem('editorTheme', newTheme);
     };
 
     if (loading) {
@@ -165,31 +157,59 @@ const DocumentEditor = () => {
     }
 
     return (
-        <div>
-            <h2>Document Editor</h2>
+        <div className="container">
+            <h2 className="my-3">Document Editor</h2>
             <h3>{title}</h3>
-            <button onClick={toggleEditorTheme}>
+            <button
+                className="btn btn-primary btn-lg my-2"
+                onClick={toggleEditorTheme}
+                style={{ fontSize: '18px' }}
+            >
                 Toggle {editorTheme === 'light' ? 'Dark' : 'Light'} Mode
             </button>
             <textarea
                 value={content}
                 onChange={handleContentChange}
                 placeholder="Edit your document here"
-                className={`document-editor-textarea ${editorTheme}`}
+                className={`form-control document-editor-textarea ${editorTheme === 'dark' ? 'bg-dark text-light' : ''}`}
                 disabled={loading}
+                style={{ height: '400px', fontSize: '22px' }}
             />
-            <div className="editor-actions">
-                <button onClick={undo} disabled={historyIndex <= 0}>Undo</button>
-                <button onClick={redo} disabled={historyIndex >= history.length - 1}>Redo</button>
-                <button onClick={clearDocument}>Clear Document</button>
+            <div className="editor-actions my-3">
+                <button
+                    className="btn btn-success mx-1"
+                    onClick={undo}
+                    disabled={historyIndex <= 0}
+                    style={{ fontSize: '18px' }}
+                >
+                    Undo
+                </button>
+                <button
+                    className="btn btn-warning mx-1"
+                    onClick={redo}
+                    disabled={historyIndex >= history.length - 1}
+                    style={{ fontSize: '18px' }}
+                >
+                    Redo
+                </button>
+                <button
+                    className="btn btn-danger mx-1"
+                    onClick={clearDocument}
+                    style={{ fontSize: '18px' }}
+                >
+                    Clear Document
+                </button>
             </div>
-            <div className="word-char-count">
-                <p>Word Count: {wordCount}</p>
-                <p>Character Count: {charCount}</p>
+            <div className="word-char-count my-3">
+                <p style={{ fontSize: '24px', fontWeight: 'bold' }}>Word Count: {wordCount}</p>
+                <p style={{ fontSize: '24px', fontWeight: 'bold' }}>Character Count: {charCount}</p>
             </div>
-            <div className="notifications-container">
+            <div className="notifications-container my-3">
                 {notifications.map((notification, index) => (
-                    <div key={index} className={`notification-box ${notification.type}`}>
+                    <div 
+                        key={index} 
+                        className={`alert alert-${notification.type}`} 
+                        style={{ color: 'green', fontWeight: 'bold' }}>
                         {notification.message}
                     </div>
                 ))}
