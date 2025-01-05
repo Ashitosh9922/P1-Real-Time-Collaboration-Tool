@@ -1,14 +1,15 @@
-import { useSocket } from '../SocketContext';
 import React, { useState, useEffect } from 'react';
+import { useSocket } from '../SocketContext';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import './DocumentPage.css';  
+import './DocumentPage.css'; 
 
 const CreateDocument = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [showForm, setShowForm] = useState(false); 
     const [documents, setDocuments] = useState([]); 
+    const [searchQuery, setSearchQuery] = useState(''); 
     const socket = useSocket();
     const navigate = useNavigate();
 
@@ -33,7 +34,7 @@ const CreateDocument = () => {
                 if (response?.message === 'Document created successfully') {
                     alert('Document created successfully!');
                     setShowForm(false); 
-                    fetchDocuments(); 
+                    fetchDocuments();
                 }
             });
 
@@ -46,7 +47,7 @@ const CreateDocument = () => {
         }
     };
 
-    
+    // Fetch documents from the server
     const fetchDocuments = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -57,18 +58,18 @@ const CreateDocument = () => {
 
         try {
             const response = await axios.get('http://localhost:5000/api/documents/', {
-                headers: {  
+                headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setDocuments(response.data); 
+            setDocuments(response.data); // Assuming the backend returns an array of documents
         } catch (error) {
             console.error('Error fetching documents:', error);
             alert('Error fetching documents. Please try again.');
         }
     };
 
-    // Handle delete request
+  
     const handleDelete = async (documentId) => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -81,7 +82,7 @@ const CreateDocument = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert('Document deleted successfully!');
-            fetchDocuments(); 
+            fetchDocuments(); // Re-fetch the documents to reflect the deletion
         } catch (error) {
             console.error('Error deleting document:', error);
             alert('Error deleting document. Please try again.');
@@ -91,6 +92,11 @@ const CreateDocument = () => {
     useEffect(() => {
         fetchDocuments();
     }, []);
+
+  
+    const filteredDocuments = documents.filter((doc) =>
+        doc.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
         <div>
@@ -126,11 +132,21 @@ const CreateDocument = () => {
             )}
 
             <h2>Your Documents</h2>
+
+            {/* Search bar */}
+            <input
+                type="text"
+                placeholder="Search documents by title"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-bar"
+            />
+
             <div className="document-grid">
-                {documents.length === 0 ? (
+                {filteredDocuments.length === 0 ? (
                     <p>No documents found.</p>
                 ) : (
-                    documents.map((doc) => (
+                    filteredDocuments.map((doc) => (
                         <div key={doc._id} className="document-card">
                             <div className="card-body">
                                 <h5 className="card-title">{doc.title}</h5>
