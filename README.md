@@ -4,7 +4,8 @@ A **Real-Time Document Collaboration Tool** built using the **MERN stack** (Mong
 
 ### **Features**  
 - **Real-Time Collaboration**: Simultaneous document editing with live updates.  
-- **Document Editing**: Rich-text editor for making changes.  
+- **Document Editing**: Rich-text editor for making changes.
+- **Search Bar**: Filters documents by title using a search bar.
 - **Version Control**: Undo/redo with a history of edits.  
 - **Real-Time Notifications**: Alerts on updates, showing who made changes and when.  
 - **Document Clear**: Reset the document to its initial state.  
