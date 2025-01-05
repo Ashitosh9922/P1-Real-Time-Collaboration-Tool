@@ -2,19 +2,19 @@ import { useSocket } from '../SocketContext';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import './DocumentPage.css';  // Make sure the path is correct
+import './DocumentPage.css';  
 
 const CreateDocument = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [showForm, setShowForm] = useState(false); // To toggle form visibility
-    const [documents, setDocuments] = useState([]); // To store documents
+    const [showForm, setShowForm] = useState(false); 
+    const [documents, setDocuments] = useState([]); 
     const socket = useSocket();
     const navigate = useNavigate();
 
     const handleCreate = (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token'); // Assuming user ID is stored here
+        const token = localStorage.getItem('token'); 
 
         if (!token) {
             alert('User not logged in.');
@@ -32,8 +32,8 @@ const CreateDocument = () => {
             socket.on('documentCreated', (response) => {
                 if (response?.message === 'Document created successfully') {
                     alert('Document created successfully!');
-                    setShowForm(false); // Hide the form after document creation
-                    fetchDocuments(); // Fetch the updated list of documents
+                    setShowForm(false); 
+                    fetchDocuments(); 
                 }
             });
 
@@ -46,7 +46,7 @@ const CreateDocument = () => {
         }
     };
 
-    // Fetch documents from the server
+    
     const fetchDocuments = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -61,7 +61,7 @@ const CreateDocument = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setDocuments(response.data); // Assuming the backend returns an array of documents
+            setDocuments(response.data); 
         } catch (error) {
             console.error('Error fetching documents:', error);
             alert('Error fetching documents. Please try again.');
@@ -81,7 +81,7 @@ const CreateDocument = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert('Document deleted successfully!');
-            fetchDocuments(); // Re-fetch the documents to reflect the deletion
+            fetchDocuments(); 
         } catch (error) {
             console.error('Error deleting document:', error);
             alert('Error deleting document. Please try again.');
