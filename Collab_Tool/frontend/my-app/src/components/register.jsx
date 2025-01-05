@@ -9,10 +9,7 @@ function Register() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   alert(`Username: ${username}\nEmail: ${email}\nPassword: ${password}`);
-  // };
+
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,10 +22,10 @@ function Register() {
         password
       });
 
-      // Alert for successful registration
+      
       alert('Registration successful! Please log in.');
       
-      // Optionally, navigate to login page after successful registration
+
       navigate('/login');
     } catch (error) {
       console.error('Registration error:', error);
