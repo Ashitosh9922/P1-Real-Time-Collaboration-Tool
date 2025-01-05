@@ -2,12 +2,12 @@ import React from 'react';
 import { useAuth } from '../AuthContext';
 
 function Navbar() {
-//   const isLoggedIn = !!localStorage.getItem('token');
+
   const { isLoggedIn, logout } = useAuth();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    window.location.href = '/'; // Redirect to home or login page
+    window.location.href = '/'; 
   };
 
   return (
