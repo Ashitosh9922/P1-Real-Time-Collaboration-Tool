@@ -18,7 +18,7 @@ A **Real-Time Document Collaboration Tool** built using the **MERN stack** (Mong
 - **Responsive Design**: Works seamlessly on all devices.
 
 ### **Tech Stack**  
-- **Frontend**: React.js, React Router, CSS, Axios, Socket.IO  
+- **Frontend**: React.js, React Router, CSS, Bootstrap, Axios, Socket.IO  
 - **Backend**: Node.js, Express.js, MongoDB, Socket.IO  
 - **Authentication**: JWT for secure user access  
 - **Real-Time Communication**: Socket.IO for bi-directional event-based updates  
