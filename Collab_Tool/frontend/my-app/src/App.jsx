@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { SocketProvider } from './SocketContext'; // Context for real-time updates
-import Login from './components/login'; // Login Component
-import CreateDocument from './components/createDocument'; // Document Creation Component
-import DocumentList from './components/documentList'; // Real-Time Document List
-import DocumentEditor from './components/documentEditior'; // Real-Time Document Editor
-import Navbar from './components/navbar'; // navbar
+import { SocketProvider } from './SocketContext'; 
+import Login from './components/login'; 
+import CreateDocument from './components/createDocument'; 
+import DocumentList from './components/documentList'; 
+import DocumentEditor from './components/documentEditior'; 
+import Navbar from './components/navbar'; 
 import Home from './components/home';
 import { AuthProvider } from './AuthContext.jsx';
 import Register from './components/register.jsx';
