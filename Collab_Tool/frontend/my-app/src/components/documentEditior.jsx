@@ -209,7 +209,7 @@ const DocumentEditor = () => {
                     <div 
                         key={index} 
                         className={`alert alert-${notification.type}`} 
-                        style={{ color: 'green', fontWeight: 'bold' }}>
+                        style={{ color: 'black', fontWeight: 'bold' }}>
                         {notification.message}
                     </div>
                 ))}
